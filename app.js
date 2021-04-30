@@ -1,16 +1,32 @@
+// Imports de l'application
+
+// Express : framework http permet la création des routes
+// intercepte la requête http et envoie une réponse http
 const express = require('express');
+
+// CORS : Autorise les requêtes provenant d'autres domaines
+// Cross Origin Request Sharing
 const cors = require('express-cors');
+
+// Récupération des données envoyées avec la méthode POST
 const bodyParser = require('body-parser');
+
+// Connection au serveur MySQL et exéution des requêtes
 const mysql = require('mysql2/promise');
 
+// Une varaible qui stocke la connxion à la BD
 let connection;
 
+// Une fonction qui établit la connexion
 const connectToDatabase = async () => {
     connection = await mysql.createConnection({
         host: 'localhost', user: 'root', database: 'sql_2021'
     });
 }
 
+// Une fonction qui gère la réponse http après une requête SQL
+// soit on a un résultat alors on envoie ue réponse 200
+// soit aucun résultat alors réponse 404
 const getResponse = (response, rows, single = false) => {
     if (rows.length > 0) {
         if (single) rows = rows[0];
@@ -20,12 +36,20 @@ const getResponse = (response, rows, single = false) => {
     }
 }
 
+// Création de l'application Express
 const app = express();
+
+// Middleware CORS ajoute des infos dans l'en tête http
 app.use(cors());
 
+// Middleware qui récupère les données postées
+// et les stock dans request.body
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+/*************************
+ * Définition des routes
+ **************************/
 app.get('/produit', async (request, response) => {
     const data = await connection.execute('SELECT * FROM vue_details_produits');
     getResponse(response, data[0]);
@@ -66,7 +90,11 @@ app.get('/categorie', async (request, response) => {
 
 
 
+// Lancement de l'application
 app.listen(3000, async () => {
     console.log('app started');
     await connectToDatabase();
 });
+
+
+
