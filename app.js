@@ -6,7 +6,7 @@ const express = require('express');
 
 // CORS : Autorise les requêtes provenant d'autres domaines
 // Cross Origin Request Sharing
-const cors = require('express-cors');
+const cors = require('cors');
 
 // Récupération des données envoyées avec la méthode POST
 const bodyParser = require('body-parser');
@@ -14,7 +14,7 @@ const bodyParser = require('body-parser');
 // Connection au serveur MySQL et exéution des requêtes
 const mysql = require('mysql2/promise');
 
-// Une varaible qui stocke la connxion à la BD
+// Une variable qui stocke la connxion à la BD
 let connection;
 
 // Une fonction qui établit la connexion
